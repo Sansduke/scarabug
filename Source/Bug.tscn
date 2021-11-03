@@ -6,7 +6,13 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 32, 32 )
 
-[node name="Bug" type="Area2D"]
+[node name="Bug" type="Area2D" groups=[
+"bugs",
+]]
+show_behind_parent = true
+z_index = -1
+z_as_relative = false
+input_pickable = false
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

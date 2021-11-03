@@ -21,11 +21,13 @@ func _process(delta):
 	pass
 
 func startGame():
+	print("starting game")
 	fillBoard()
 
 func fillBoard():
-	for i in $PlayArea.get_children():
+	for i in get_tree().get_nodes_in_group("bugs"):
 		i.queue_free()
+	#$Grid.clear()
 	
 	for rw in range(0, $PlayArea.rows):
 		for col in range(0, $PlayArea.columbs):
@@ -40,7 +42,7 @@ func fillBoard():
 			while check_for_matches(Vector2(col, rw)).size() > 3:
 				print("match at %d , %d type %d"%[col, rw, newbug.get_type()])
 				newbug.set_type(randi()%4)
-				
+			#$Grid.add_icon_item(newbug.get_texture())
 
 
 func check_for_matches(atposition):
