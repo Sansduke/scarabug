@@ -18,9 +18,6 @@ position = Vector2( 40, 40 )
 z_index = 1
 collision_layer = 2
 script = ExtResource( 3 )
-rows = null
-columbs = null
-item_size = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayArea"]
 position = Vector2( 112, 192 )
@@ -32,3 +29,4 @@ tile_set = SubResource( 2 )
 format = 1
 
 [connection signal="input_event" from="PlayArea" to="PlayArea" method="_on_PlayArea_input_event"]
+[connection signal="switched_objects" from="PlayArea" to="." method="_on_PlayArea_switched_objects"]

@@ -34,7 +34,7 @@ func fillBoard():
 			var newbug = Bug.instance()
 			newbug.playarea_position = Vector2(col, rw)
 			newbug.position = Vector2(col*$PlayArea.item_size, rw*$PlayArea.item_size)
-			newbug.set_type(0)
+			newbug.set_type(randi()%4)
 			$PlayArea.add_child(newbug)
 			$PlayArea.set_object_at(col, rw, newbug)
 			#newbug.update()
@@ -47,6 +47,7 @@ func fillBoard():
 
 func check_for_matches(atposition):
 	var matchstack = []
+	matchstack.clear()
 	var bugtype = $PlayArea.get_object_at(atposition.x, atposition.y).get_type()
 	if bugtype == null:
 		return []
@@ -112,3 +113,15 @@ func find_matches(atposition, matchtype, activestack):
 	
 	return
 	
+
+
+
+
+func _on_PlayArea_switched_objects(firstposition, secondposition):
+	var firstmatches = check_for_matches(firstposition)
+	var secondmatches = check_for_matches(secondposition)
+	
+	if firstmatches.size() > 3:
+		print("matches at first position")
+	if secondmatches.size() > 3:
+		print("matches at second position")
