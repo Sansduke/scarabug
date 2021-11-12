@@ -57,7 +57,7 @@ func _on_PlayArea_input_event(viewport, event, shape_idx):
 			
 			selected_objects.clear()
 		
-	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_RIGHT:
+	if event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
 		var testmatches = get_parent().check_for_matches(Vector2(event.position.x/item_size-1,event.position.y/item_size-1))
 		for o in testmatches:
 			o.set_type(5)

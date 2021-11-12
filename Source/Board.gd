@@ -34,15 +34,21 @@ func fillBoard():
 			var newbug = Bug.instance()
 			newbug.playarea_position = Vector2(col, rw)
 			newbug.position = Vector2(col*$PlayArea.item_size, rw*$PlayArea.item_size)
-			newbug.set_type(randi()%4)
+			var possibletypes = range(0, 4)
+			possibletypes.shuffle()
+			newbug.set_type(possibletypes.pop_front())
 			$PlayArea.add_child(newbug)
 			$PlayArea.set_object_at(col, rw, newbug)
-			#newbug.update()
-			#newbug.show()
+	
+	#check for matches already in place after the baord is set up and change the bug type to remove the match if present
+	#this needs to be done in a seperate loop so it avoids creatind an unrelated match by switching the type
+	for rw in range(0, $PlayArea.rows):
+		for col in range(0, $PlayArea.columbs):
+			var possibletypes = range(0, 4)
 			while check_for_matches(Vector2(col, rw)).size() > 3:
-				print("match at %d , %d type %d"%[col, rw, newbug.get_type()])
-				newbug.set_type(randi()%4)
-			#$Grid.add_icon_item(newbug.get_texture())
+				var switchbug = $PlayArea.get_object_at(col, rw)
+				print("match at %d , %d type %d"%[col, rw, switchbug.get_type()])
+				switchbug.set_type(possibletypes.pop_front())
 
 
 func check_for_matches(atposition):
