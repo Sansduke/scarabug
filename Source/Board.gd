@@ -4,6 +4,7 @@ export (PackedScene) var Bug
 
 # Declare member variables here.
 var matching_types
+var score
 
 
 # Called when the node enters the scene tree for the first time.
@@ -22,6 +23,7 @@ func _process(delta):
 
 func startGame():
 	print("starting game")
+	score = 0
 	fillBoard()
 
 func fillBoard():
@@ -33,12 +35,13 @@ func fillBoard():
 		for col in range(0, $PlayArea.columbs):
 			var newbug = Bug.instance()
 			newbug.playarea_position = Vector2(col, rw)
-			newbug.position = Vector2(col*$PlayArea.item_size, rw*$PlayArea.item_size)
+			
 			var possibletypes = range(0, 4)
 			possibletypes.shuffle()
 			newbug.set_type(possibletypes.pop_front())
 			$PlayArea.add_child(newbug)
 			$PlayArea.set_object_at(col, rw, newbug)
+			newbug.desired_position = Vector2(col*$PlayArea.item_size, rw*$PlayArea.item_size)
 	
 	#check for matches already in place after the baord is set up and change the bug type to remove the match if present
 	#this needs to be done in a seperate loop so it avoids creatind an unrelated match by switching the type
@@ -120,7 +123,30 @@ func find_matches(atposition, matchtype, activestack):
 	return
 	
 
+func clear_match(matches):
+	#increase score
+	score += matches.size()
+	 
+	#removed matched bugs
+	for mb in matches:
+		mb.queue_free()
+	
+	#add bugs
+	for col in range(0, $PlayArea.columbs):
+		while $PlayArea.map[col].has(null):
+			$PlayArea.map[col].erase(null)
+			
+			var newbug = Bug.instance()
+			var possibletypes = range(0, 4)
+			possibletypes.shuffle()
+			newbug.set_type(possibletypes.pop_front())
+			$PlayArea.add_child(newbug)
+			$PlayArea.map[col].append(newbug)
+			newbug.playarea_position = Vector2(col, $PlayArea.map[col].size())
 
+		for b in range($PlayArea.map[col].size()):
+			$PlayArea.map[col][b].desired_position.y = b * $PlayArea.item_size
+			#$PlayArea.set_object_at()
 
 
 func _on_PlayArea_switched_objects(firstposition, secondposition):
@@ -129,5 +155,7 @@ func _on_PlayArea_switched_objects(firstposition, secondposition):
 	
 	if firstmatches.size() > 3:
 		print("matches at first position")
+		clear_match(firstmatches)
 	if secondmatches.size() > 3:
 		print("matches at second position")
+		clear_match(secondmatches)

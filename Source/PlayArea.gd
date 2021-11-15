@@ -41,20 +41,36 @@ func get_spaces():
 
 func _on_PlayArea_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
-		print("a click at columb %d row %d"%[event.position.x/item_size,event.position.y/item_size])
-		selected_objects.append(get_object_at(event.position.x/item_size-1,event.position.y/item_size-1))
-		if selected_objects.size() == 2:
+		var relativeposition = event.position - self.position
+		var clickindex = Vector2(floor(relativeposition.x/item_size), floor(relativeposition.y/item_size))
+		print("a click at columb %d row %d"%[clickindex.x,clickindex.y])
+		selected_objects.append(get_object_at(clickindex.x, clickindex.y))
+		selected_objects.back().selected = true
+		if selected_objects.size() >= 2:
+			
+			#//////
+			#var firstobject = selected_objects[0]
+			#set_object_at(firstobject.position.x/item_size-1, firstobject.position.y/item_size-1, selected_objects[1])
+			#var tempposition = selected_objects[1].position
+			#selected_objects[1].position = firstobject.position
+			#firstobject.position = tempposition
+			#set_object_at(event.position.x/item_size-1, event.position.y/item_size-1, firstobject)
+			#/////
+			
 			var firstobject = selected_objects[0]
-			set_object_at(firstobject.position.x/item_size-1, firstobject.position.y/item_size-1, selected_objects[1])
-			var tempposition = selected_objects[1].position
-			selected_objects[1].position = firstobject.position
-			firstobject.position = tempposition
-			set_object_at(event.position.x/item_size-1, event.position.y/item_size-1, firstobject)
+			var secondobject = selected_objects[1]
+			var firstposition = Vector2(firstobject.position.x, firstobject.position.y)
+			var secondposition = Vector2(secondobject.position.x, secondobject.position.y)
 			
+			firstobject.position = secondposition
+			set_object_at(floor(secondposition.x/item_size), floor(secondposition.y/item_size), firstobject)
+			secondobject.position = firstposition
+			set_object_at(floor(firstposition.x/item_size), floor(firstposition.y/item_size), secondobject)
 			
+			emit_signal("switched_objects", Vector2(secondposition.x/item_size-1, secondposition.y/item_size-1), Vector2(firstposition.x/item_size-1, firstposition.y/item_size-1))
 			
-			emit_signal("switched_objects", Vector2(selected_objects[1].position.x/item_size-1, selected_objects[1].position.y/item_size-1), Vector2(firstobject.position.x/item_size-1, firstobject.position.y/item_size-1))
-			
+			selected_objects[0].selected = false
+			selected_objects[1].selected = false
 			selected_objects.clear()
 		
 	if event is InputEventMouseButton and event.button_index == BUTTON_RIGHT:
