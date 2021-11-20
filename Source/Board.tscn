@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Source/Bug.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Source/Board.gd" type="Script" id=2]
 [ext_resource path="res://Source/PlayArea.gd" type="Script" id=3]
+[ext_resource path="res://Source/HUD.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/Audio/523763__matrixxx__select-granted-06.wav" type="AudioStream" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 112, 192 )
@@ -31,5 +33,15 @@ visible = false
 tile_set = SubResource( 2 )
 format = 1
 
+[node name="SubMatchTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="HUD" parent="." instance=ExtResource( 4 )]
+
+[node name="SFX1" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+
 [connection signal="input_event" from="PlayArea" to="PlayArea" method="_on_PlayArea_input_event"]
 [connection signal="switched_objects" from="PlayArea" to="." method="_on_PlayArea_switched_objects"]
+[connection signal="timeout" from="SubMatchTimer" to="." method="_on_SubMatchTimer_timeout"]
+[connection signal="start_level" from="HUD" to="." method="startLevel"]

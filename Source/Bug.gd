@@ -8,6 +8,7 @@ var desired_position
 var speed
 var bug_type
 var selected
+var moving
 
 signal clicked
 
@@ -15,13 +16,29 @@ signal clicked
 func _ready():
 	#set_type(0)
 	update()
+	#bug_type = 0
 	selected = false
 	speed = 300
 	desired_position = position
 
 func set_type(type=0):
 	bug_type = type
-	$Sprite.frame = type
+	if range(0, 4).has(bug_type):
+		$Sprite.frame = type
+	elif range(4, 8).has(bug_type):
+		$Sprite.frame = type
+	elif range(8, 12).has(bug_type):
+		$Sprite.frame = type
+
+func set_selected(isselected):
+	if isselected:
+		selected = true
+		$Sprite.frame = bug_type + 12
+		#turn on selection shader
+	else:
+		selected = false
+		$Sprite.frame = bug_type
+		#turn off selection shader
 
 func get_type():
 	return bug_type
@@ -33,16 +50,11 @@ func get_texture():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if selected:
-		$Sprite.frame = bug_type + 9
-	else:
-		$Sprite.frame = bug_type
-	
 	if desired_position != position:
-		#var direction = desired_position - position
-		#direction = direction.normalized()
-		#position += direction * speed * delta
+		moving = true
 		position = position.move_toward(desired_position, speed * delta)
+	else:
+		moving = false
 		
 		
 
