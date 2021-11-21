@@ -9,6 +9,7 @@ var score
 var score_multiplier
 var level
 var turns_left
+var is_final_move
 
 
 # Called when the node enters the scene tree for the first time.
@@ -27,7 +28,7 @@ func startGame():
 	print("starting game")
 	score = 0
 	score_multiplier = 1
-	level = 1
+	level = 5
 	$HUD.start_game()
 	$HUD.show_message(level)
 	
@@ -37,7 +38,8 @@ func endGame():
 
 func startLevel():
 	$HUD.update_level(level)
-	turns_left = 9 + 3*level 
+	turns_left = 9 + 3*level
+	is_final_move = false
 	$HUD.update_turns(turns_left)
 	
 	bug_types.clear()
@@ -58,27 +60,18 @@ func startLevel():
 
 func endLevel():
 	for b in get_tree().get_nodes_in_group("bugs"):
-		var type = b.get_type()
-		if range(4, 8).has(type):
-			b.set_type(type-4)
-	
-	#final match
-	
-	for b in get_tree().get_nodes_in_group("bugs"):
 		b.visible = false
 		b.queue_free()
 	
 	level += 1
 	$HUD.show_message(level)
 	
-	if level == 4:
+	if level == 6:
 		endGame()
 
 
 func fillBoard():
-	#for i in get_tree().get_nodes_in_group("bugs"):
-	#	i.visible = false
-	#	i.queue_free()
+	$PlayArea.reset()
 	
 	for rw in range(0, $PlayArea.rows):
 		for col in range(0, $PlayArea.columbs):
@@ -106,17 +99,23 @@ func fillBoard():
 func check_for_matches(atposition):
 	var matchstack = []
 	matchstack.clear()
-	var bugtype = $PlayArea.get_object_at(atposition.x, atposition.y).get_type()
+	var bugat = $PlayArea.get_object_at(atposition.x, atposition.y)
+	if bugat == null:
+		return []
+	var bugtype = bugat.get_type()
 	if bugtype == null:
 		return []
 	if matching_types.has(bugtype):
-		find_matches(atposition, bugtype, matchstack)
+		if is_final_move:
+			find_matches(atposition, [bugtype, 8], matchstack)
+		else:
+			find_matches(atposition, [bugtype], matchstack)
 		return matchstack
 	else:
 		return []
 
 
-func find_matches(atposition, matchtype, activestack):
+func find_matches(atposition, matchtypes, activestack):
 	var active = $PlayArea.get_object_at(atposition.x, atposition.y)
 	activestack.append(active)
 	
@@ -125,38 +124,41 @@ func find_matches(atposition, matchtype, activestack):
 		var posibility = $PlayArea.get_object_at(atposition.x, atposition.y-1)
 		if posibility == null:
 			return
-		if posibility.get_type() == matchtype and !activestack.has(posibility):
-			find_matches(Vector2(atposition.x, atposition.y-1), matchtype, activestack)
+		if matchtypes.has(posibility.get_type()) and !activestack.has(posibility):
+			find_matches(Vector2(atposition.x, atposition.y-1), matchtypes, activestack)
 	
 	#south
 	if atposition.y < $PlayArea.rows-1:
 		var posibility = $PlayArea.get_object_at(atposition.x, atposition.y+1)
 		if posibility == null:
 			return
-		if posibility.get_type() == matchtype and !activestack.has(posibility):
-			find_matches(Vector2(atposition.x, atposition.y+1), matchtype, activestack)
+		if matchtypes.has(posibility.get_type()) and !activestack.has(posibility):
+			find_matches(Vector2(atposition.x, atposition.y+1), matchtypes, activestack)
 	
 	#east
 	if atposition.x < $PlayArea.columbs-1:
 		var posibility = $PlayArea.get_object_at(atposition.x+1, atposition.y)
 		if posibility == null:
 			return
-		if posibility.get_type() == matchtype and !activestack.has(posibility):
-			find_matches(Vector2(atposition.x+1, atposition.y), matchtype, activestack)
+		if matchtypes.has(posibility.get_type()) and !activestack.has(posibility):
+			find_matches(Vector2(atposition.x+1, atposition.y), matchtypes, activestack)
 	
 	#west
 	if atposition.x > 0:
 		var posibility = $PlayArea.get_object_at(atposition.x-1, atposition.y)
 		if posibility == null:
 			return
-		if posibility.get_type() == matchtype and !activestack.has(posibility):
-			find_matches(Vector2(atposition.x-1, atposition.y), matchtype, activestack)
+		if matchtypes.has(posibility.get_type()) and !activestack.has(posibility):
+			find_matches(Vector2(atposition.x-1, atposition.y), matchtypes, activestack)
 	
 	return
 
 func clear_match(matches):
+	#cant undo anymore
+	$PlayArea.last_switch.clear()
+	
 	#increase score
-	score += 10 * (matches.size()-3) * score_multiplier
+	score += 10 * max(1, (matches.size()-3)) * score_multiplier
 	$HUD.update_score(score)
 	 
 	for col in range(0, $PlayArea.columbs): # for each columb
@@ -167,8 +169,8 @@ func clear_match(matches):
 				$PlayArea.map[col].erase(mb)
 				mb.queue_free()
 
-		#add bugs if needed
-		while $PlayArea.map[col].size() < $PlayArea.rows:
+		# if it is not the last turn and this columb is missing bugs then add bugs
+		while !is_final_move and $PlayArea.map[col].size() < $PlayArea.rows:
 
 			var newbug = Bug.instance()
 			var possibletypes = bug_types.duplicate()
@@ -197,7 +199,7 @@ func clear_all_matches():
 				match_was_found = true
 				clear_match(potentalmatches)
 	if match_was_found:
-		$SFX1.play()
+		$SFX1.play() #play match sound again and increase pitch
 		$SFX1.pitch_scale += 0.1
 		score_multiplier += 1
 		$SubMatchTimer.start()
@@ -206,7 +208,7 @@ func clear_all_matches():
 		score_multiplier = 1
 
 func ready_for_input():
-	if $SubMatchTimer.is_stopped() and $HUD.is_waiting():
+	if $SubMatchTimer.is_stopped() and $HUD.is_waiting() and $FinalMoveTimer.is_stopped() and $LevelDelayTimer.is_stopped():
 		return true
 	else:
 		return false
@@ -227,7 +229,7 @@ func _on_PlayArea_switched_objects(firstposition, secondposition):
 		match_was_found = true
 	
 	if match_was_found:
-		$SFX1.play()
+		$SFX1.play() #play match sound
 		score_multiplier += 1
 		$SubMatchTimer.start()
 	else:
@@ -236,7 +238,8 @@ func _on_PlayArea_switched_objects(firstposition, secondposition):
 	turns_left -= 1
 	$HUD.update_turns(turns_left)
 	if turns_left <= 0:
-		endLevel()
+		$SFX2.play() #play end of level sound
+		$FinalMoveTimer.start()
 
 
 func _on_SubMatchTimer_timeout():
@@ -248,3 +251,42 @@ func _on_SubMatchTimer_timeout():
 		$SubMatchTimer.start()
 	else:
 		clear_all_matches()
+
+
+func finalMove():
+	is_final_move = true
+	
+	var grubtype
+	if level == 5:
+		$HUD.grub_color()
+		grubtype = yield($HUD, "grub_selection_made")
+	
+	for b in get_tree().get_nodes_in_group("bugs"):
+		var type = b.get_type()
+		if range(4, 8).has(type):
+			b.set_type(type-4)
+			#have this bug emit particle
+		if type == 8: #fly
+			continue
+		elif type == 9: #mantis
+			var mantisstack = []
+			find_matches(Vector2(floor(b.position.x/$PlayArea.item_size), floor(b.position.y/$PlayArea.item_size)), [9], mantisstack)
+			if mantisstack.size() > 1:
+				print("clear manti") #todo clearing to many manti ????
+				clear_match(mantisstack)
+		elif type == 10: #grub
+			b.set_type(grubtype)
+		elif type == 11: #arachnid
+			continue
+	
+	if level > 1:
+		$SFX3.play() #play final move sound
+	clear_all_matches()
+	
+	$LevelDelayTimer.start()
+
+
+func _on_PlayArea_undid_switched_objects():
+	turns_left += 1
+	$HUD.update_turns(turns_left)
+	

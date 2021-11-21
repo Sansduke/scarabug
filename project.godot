@@ -44,7 +44,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="GameOff2021"
+config/name="ScaraBug"
 run/main_scene="res://Source/Board.tscn"
 config/icon="res://icon.png"
 
@@ -57,7 +57,9 @@ RestHandler="*res://addons/github-integration/scenes/RestHandler.tscn"
 
 [display]
 
-window/size/height=800
+window/size/width=820
+window/size/height=680
+window/size/resizable=false
 
 [editor_plugins]
 

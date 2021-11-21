@@ -4,30 +4,37 @@ extends Area2D
 # Declare member variables here. Examples:
 export var rows = 12
 export var columbs = 7
-export var item_size = 32
+export var item_size = 50
 var map = [].append([])
 var selected_objects
 var last_switch
 
 signal switched_objects
+signal undid_switched_objects
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	rows = 12
 	columbs = 7
-	item_size = 32
+	item_size = 50
 	selected_objects = []
 	last_switch = []
 	
+	reset()
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+func reset():
 	map = []
 	for x in range(columbs):
 		var y = []
 		y.resize(rows)
 		map.append(y)
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+	
+	selected_objects.clear()
+	last_switch.clear()
 
 func swap_objects():
 	pass
@@ -36,7 +43,10 @@ func set_object_at(x, y, object):
 	map[x][y] = object
 
 func get_object_at(x, y):
-	return map[x][y]
+	if x >= map.size() or y >= map[x].size():
+		return null
+	else:
+		return map[x][y]
 
 func get_spaces():
 	return rows * columbs 
@@ -75,3 +85,20 @@ func _on_PlayArea_input_event(viewport, event, shape_idx):
 		var testmatches = get_parent().check_for_matches(Vector2(event.position.x/item_size-1,event.position.y/item_size-1))
 		for o in testmatches:
 			o.set_type(5)
+
+
+func _on_HUD_undo_last_move():
+	if last_switch.size() == 2:
+		var firstobject = get_object_at(floor(last_switch[0].x/item_size), floor(last_switch[0].y/item_size))
+		var secondobject = get_object_at(floor(last_switch[1].x/item_size), floor(last_switch[1].y/item_size))
+		var firstposition = last_switch[0]
+		var secondposition = last_switch[1]
+			
+		firstobject.desired_position = secondposition
+		set_object_at(floor(secondposition.x/item_size), floor(secondposition.y/item_size), firstobject)
+		secondobject.desired_position = firstposition
+		set_object_at(floor(firstposition.x/item_size), floor(firstposition.y/item_size), secondobject)
+		
+		last_switch.clear()
+		
+		emit_signal("undid_switched_objects")

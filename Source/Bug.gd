@@ -18,7 +18,7 @@ func _ready():
 	update()
 	#bug_type = 0
 	selected = false
-	speed = 300
+	speed = 400
 	desired_position = position
 
 func set_type(type=0):

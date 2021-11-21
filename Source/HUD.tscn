@@ -1,35 +1,48 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Source/HUD.gd" type="Script" id=1]
+[ext_resource path="res://Source/GrubSelectionPanel.gd" type="Script" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 0.847059, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0, 1, 0.129412, 1 )
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource( 1 )
 
 [node name="ScoreLabel" type="Label" parent="."]
-margin_left = 612.0
-margin_top = 146.0
-margin_right = 730.0
-margin_bottom = 189.0
+margin_left = 523.0
+margin_top = 152.0
+margin_right = 641.0
+margin_bottom = 195.0
 text = "Score: 0"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="LevelLabel" type="Label" parent="."]
-margin_left = 614.0
-margin_top = 111.0
-margin_right = 744.0
-margin_bottom = 150.0
+margin_left = 525.0
+margin_top = 117.0
+margin_right = 655.0
+margin_bottom = 156.0
 text = "Level: 1"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TurnsLabel" type="Label" parent="."]
-margin_left = 613.0
-margin_top = 180.0
-margin_right = 700.0
-margin_bottom = 222.0
+margin_left = 524.0
+margin_top = 186.0
+margin_right = 611.0
+margin_bottom = 228.0
 text = "0 turns left"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -46,25 +59,103 @@ __meta__ = {
 
 [node name="StartButton" type="Button" parent="."]
 visible = false
-margin_left = 615.0
-margin_top = 269.0
-margin_right = 656.0
-margin_bottom = 289.0
+margin_left = 151.0
+margin_top = 265.0
+margin_right = 192.0
+margin_bottom = 285.0
 text = "Start"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="SoundToggleButton" type="Button" parent="."]
-margin_left = 944.0
-margin_top = 8.0
-margin_right = 1018.0
-margin_bottom = 28.0
+margin_left = 660.0
+margin_top = 72.0
+margin_right = 734.0
+margin_bottom = 92.0
 toggle_mode = true
 text = "Sound On"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="UndoButton" type="Button" parent="."]
+margin_left = 675.0
+margin_top = 598.0
+margin_right = 721.0
+margin_bottom = 618.0
+text = "Undo"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GrubSelectionPanel" type="Panel" parent="."]
+visible = false
+margin_left = 472.0
+margin_top = 300.0
+margin_right = 648.0
+margin_bottom = 542.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InstructionLabel" type="Label" parent="GrubSelectionPanel"]
+margin_right = 40.0
+margin_bottom = 14.0
+text = "What color scarab should
+the grubs turn in to?"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ButtonT0" type="Button" parent="GrubSelectionPanel"]
+margin_left = 72.0
+margin_top = 63.0
+margin_right = 105.0
+margin_bottom = 83.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 1 )
+text = "Sky"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ButtonT1" type="Button" parent="GrubSelectionPanel"]
+margin_left = 64.0
+margin_top = 99.0
+margin_right = 113.0
+margin_bottom = 119.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
+text = "Blood"
+
+[node name="ButtonT2" type="Button" parent="GrubSelectionPanel"]
+margin_left = 66.0
+margin_top = 137.0
+margin_right = 108.0
+margin_bottom = 157.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 3 )
+text = "Gold"
+
+[node name="ButtonT3" type="Button" parent="GrubSelectionPanel"]
+margin_left = 64.0
+margin_top = 175.0
+margin_right = 112.0
+margin_bottom = 195.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 4 )
+text = "Grass"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="pressed" from="StartButton" to="." method="_on_StartButton_pressed"]
 [connection signal="toggled" from="SoundToggleButton" to="." method="_on_SoundToggleButton_toggled"]
+[connection signal="pressed" from="UndoButton" to="." method="_on_UndoButton_pressed"]
+[connection signal="pressed" from="GrubSelectionPanel/ButtonT0" to="GrubSelectionPanel" method="_on_ButtonT0_pressed"]
+[connection signal="pressed" from="GrubSelectionPanel/ButtonT1" to="GrubSelectionPanel" method="_on_ButtonT1_pressed"]
+[connection signal="pressed" from="GrubSelectionPanel/ButtonT2" to="GrubSelectionPanel" method="_on_ButtonT2_pressed"]
+[connection signal="pressed" from="GrubSelectionPanel/ButtonT3" to="GrubSelectionPanel" method="_on_ButtonT3_pressed"]
