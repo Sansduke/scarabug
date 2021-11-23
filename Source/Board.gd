@@ -28,7 +28,7 @@ func startGame():
 	print("starting game")
 	score = 0
 	score_multiplier = 1
-	level = 5
+	level = 1
 	$HUD.start_game()
 	$HUD.show_message(level)
 	
@@ -38,7 +38,7 @@ func endGame():
 
 func startLevel():
 	$HUD.update_level(level)
-	turns_left = 9 + 3*level
+	turns_left = 8 + 2*level
 	is_final_move = false
 	$HUD.update_turns(turns_left)
 	
@@ -100,7 +100,7 @@ func check_for_matches(atposition):
 	var matchstack = []
 	matchstack.clear()
 	var bugat = $PlayArea.get_object_at(atposition.x, atposition.y)
-	if bugat == null:
+	if bugat == null or !is_instance_valid(bugat):
 		return []
 	var bugtype = bugat.get_type()
 	if bugtype == null:
@@ -169,8 +169,8 @@ func clear_match(matches):
 				$PlayArea.map[col].erase(mb)
 				mb.queue_free()
 
-		# if it is not the last turn and this columb is missing bugs then add bugs
-		while !is_final_move and $PlayArea.map[col].size() < $PlayArea.rows:
+		# add more bugs if this columb is missing bugs
+		while $PlayArea.map[col].size() < $PlayArea.rows:
 
 			var newbug = Bug.instance()
 			var possibletypes = bug_types.duplicate()
@@ -255,11 +255,12 @@ func _on_SubMatchTimer_timeout():
 
 func finalMove():
 	is_final_move = true
+	bug_types = [0, 1, 2, 3] #only place the main types on the last move
 	
 	var grubtype
 	if level == 5:
 		$HUD.grub_color()
-		grubtype = yield($HUD, "grub_selection_made")
+		grubtype = yield($HUD, "grub_selection_made") #yeild to get input from player on grub type
 	
 	for b in get_tree().get_nodes_in_group("bugs"):
 		var type = b.get_type()
