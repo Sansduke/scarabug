@@ -1,28 +1,26 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Assets/Textures/bug-texture-atlas2.png" type="Texture" id=1]
 [ext_resource path="res://Source/Bug.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Textures/particle-texture1.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Themes/glitchshader.tres" type="Shader" id=4]
+[ext_resource path="res://Assets/Themes/spreadparticle.tres" type="Material" id=5]
+[ext_resource path="res://Assets/Textures/particle-texture2.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Themes/boxparticle.tres" type="Material" id=7]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 25, 25 )
 
-[sub_resource type="Shader" id=2]
-code = "shader_type canvas_item;
-
-void fragment(){
-	
-}"
-
 [sub_resource type="ShaderMaterial" id=3]
-shader = SubResource( 2 )
-
-[sub_resource type="ParticlesMaterial" id=4]
-flag_disable_z = true
-spread = 0.0
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 30.0
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
+shader = ExtResource( 4 )
+shader_param/red_displacement = 0.0
+shader_param/green_displacement = 0.0
+shader_param/blue_displacement = 0.0
+shader_param/ghost = 0.0
+shader_param/intensity = 0.0
+shader_param/scan_effect = 0.0
+shader_param/distortion_effect = 0.0
+shader_param/negative_effect = 0.0
 
 [node name="Bug" type="Area2D" groups=["bugs"]]
 show_behind_parent = true
@@ -45,6 +43,24 @@ vframes = 6
 [node name="TransformParticles" type="Particles2D" parent="."]
 position = Vector2( 25, 25 )
 emitting = false
+amount = 12
+lifetime = 0.7
+one_shot = true
+process_material = ExtResource( 5 )
+texture = ExtResource( 3 )
+
+[node name="ClearParticles" type="Particles2D" parent="."]
+position = Vector2( 25, 25 )
+emitting = false
+amount = 1
+lifetime = 0.5
 one_shot = true
 explosiveness = 1.0
-process_material = SubResource( 4 )
+process_material = ExtResource( 7 )
+texture = ExtResource( 6 )
+
+[node name="DeletionTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="timeout" from="DeletionTimer" to="." method="_on_DeletionTimer_timeout"]

@@ -7,6 +7,7 @@ var bug_types
 var matching_types
 var score
 var score_multiplier
+var hiscore
 var level
 var turns_left
 var is_final_move
@@ -29,17 +30,28 @@ func startGame():
 	score = 0
 	score_multiplier = 1
 	level = 1
+	
+	hiscore = 0 #incase save file is corrupt
+	hiscore = $DataSaver.loadSave()["hiscore"]
+	$HUD.update_hiscore(hiscore)
+	
 	$HUD.start_game()
 	$HUD.show_message(level)
 	
 
 func endGame():
+	$SFX4.play()
+	if score > hiscore:
+		$DataSaver.storeSave({"hiscore": score})
 	startGame()
 
 func startLevel():
-	$HUD.update_level(level)
-	turns_left = 8 + 2*level
 	is_final_move = false
+	$HUD.update_level(level)
+	if level == 1:
+		turns_left = 6
+	else:
+		turns_left = 6 + 2*level
 	$HUD.update_turns(turns_left)
 	
 	bug_types.clear()
@@ -59,15 +71,22 @@ func startLevel():
 	fillBoard()
 
 func endLevel():
+	var bug_is_moving = false
 	for b in get_tree().get_nodes_in_group("bugs"):
-		b.visible = false
-		b.queue_free()
+		if b.moving == true:
+			bug_is_moving = true
+	if bug_is_moving:
+		$LevelDelayTimer.start()
+	else:
+		for b in get_tree().get_nodes_in_group("bugs"):
+			b.visible = false
+			b.queue_free()
 	
-	level += 1
-	$HUD.show_message(level)
+		level += 1
+		$HUD.show_message(level)
 	
-	if level == 6:
-		endGame()
+		if level == 6:
+			endGame()
 
 
 func fillBoard():
@@ -167,7 +186,8 @@ func clear_match(matches):
 		for mb in matches:
 			if $PlayArea.map[col].has(mb):
 				$PlayArea.map[col].erase(mb)
-				mb.queue_free()
+				mb.clear()
+				
 
 		# add more bugs if this columb is missing bugs
 		while $PlayArea.map[col].size() < $PlayArea.rows:
@@ -266,7 +286,7 @@ func finalMove():
 		var type = b.get_type()
 		if range(4, 8).has(type):
 			b.set_type(type-4)
-			#have this bug emit particle
+			b.transform()
 		if type == 8: #fly
 			continue
 		elif type == 9: #mantis
@@ -277,15 +297,17 @@ func finalMove():
 				clear_match(mantisstack)
 		elif type == 10: #grub
 			b.set_type(grubtype)
+			b.transform()
 		elif type == 11: #arachnid
 			continue
 	
 	if level > 1:
 		$SFX3.play() #play final move sound
-	clear_all_matches()
-	
-	$LevelDelayTimer.start()
+	$FinalClearTimer.start()
 
+func finalClear():
+	clear_all_matches()
+	$LevelDelayTimer.start()
 
 func _on_PlayArea_undid_switched_objects():
 	turns_left += 1
