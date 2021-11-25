@@ -5,12 +5,12 @@ extends CanvasLayer
 # var a = 2
 # var b = "text"
 var messages = {
-	1 : "level 1 \nclick any 2 bugs to swap \nmatch the same colored scarabs in groups of 4 or more" ,
-	2 : "level 2 \nbugged scarabs can't be matched during your turn phase \nbut turn back into their color after" ,
-	3 : "level 3 \nthe fly can't be matched during your turn phase \nbut combines with other matches after" ,
-	4 : "level 4 \nthe mantis can't be matched during your turn phase \nbut eliminate eachother after" ,
-	5 : "level 5 \nthe the grub can't be matched during your turn phase \nbut tranforms into a specified color after" ,
-	6 : "level 6 \nthe arachnid can't be matched during your turn phase \n" ,
+	1 : "level 1 \n\nClick any 2 bugs to swap. \nMatch the same colored scarabs in groups of 4 or more" ,
+	2 : "level 2 \n\nBugged scarabs can't be matched during your turn phase \nbut turn back into their color after" ,
+	3 : "level 3 \n\nThe fly can't be matched during your turn phase \nbut combines with other matches after" ,
+	4 : "level 4 \n\nThe mantis can't be matched during your turn phase \nbut eliminate each other after" ,
+	5 : "level 5 \n\nThe the grub can't be matched during your turn phase \nbut tranforms into a specified color after" ,
+	6 : "level 6 \n\nThe arachnid \n" ,
 }
 var grub_selection
 signal start_level
@@ -28,8 +28,9 @@ func _ready():
 #	pass
 
 func start_game():
-	$ScoreLabel.text = "Score: 0"
-	$LevelLabel.text = "Level: 1"
+	#$ScoreLabel.text = "Score: 0"
+	#$LevelLabel.text = "Level: 1"
+	pass
 
 func show_message(mid):
 	$MessageLabel.text = messages[mid]
@@ -44,16 +45,22 @@ func grub_color():
 	emit_signal("grub_selection_made", grub_selection)
 
 func update_score(score):
-	$ScoreLabel.text = "Score: " + str(score)
+	$ScoreValue.text = str(score)
+
+func update_hiscore(score):
+	$HiScoreValue.text = str(score)
 
 func update_level(level):
-	$LevelLabel.text = "Level: " + str(level)
+	$LevelValue.text = str(level)
 
 func update_turns(turns):
-	$TurnsLabel.text = str(turns) + " turns left" 
+	$TurnsValue.text = str(turns)
 
 func is_waiting():
-	return !$MessageLabel.visible
+	if $MessageLabel.visible or $GrubSelectionPanel.visible:
+		return false
+	else:
+		return true
 
 func _on_StartButton_pressed():
 	$MessageLabel.visible = false
