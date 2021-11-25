@@ -46,13 +46,7 @@ func get_type():
 func get_texture():
 	return $Sprite.texture
 
-func clear():
-	$ClearParticles.restart()
-	$Sprite.visible = false
-	$DeletionTimer.start()
 
-func transform():
-	$TransformParticles.restart()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -68,7 +62,3 @@ func _process(delta):
 #func _on_Bug_input_event(viewport, event, shape_idx):
 #	if event is InputEventMouseButton and event.pressed and event.button_index == BUTTON_LEFT:
 #		print("bug clicked")
-
-
-func _on_DeletionTimer_timeout():
-	queue_free()

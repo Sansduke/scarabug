@@ -56,15 +56,11 @@ func _on_PlayArea_input_event(viewport, event, shape_idx):
 		var relativeposition = event.position - self.position
 		var clickindex = Vector2(floor(relativeposition.x/item_size), floor(relativeposition.y/item_size))
 		print("a click at columb %d row %d"%[clickindex.x,clickindex.y])
+		selected_objects.append(get_object_at(clickindex.x, clickindex.y))
 		
-		var clickedobject = get_object_at(clickindex.x, clickindex.y)
-		if selected_objects.has(clickedobject): # this is already selected so unselect it
-			selected_objects.back().set_selected(false)
-			selected_objects.erase(clickedobject)
-		else: # add to selected
-			selected_objects.append(get_object_at(clickindex.x, clickindex.y))
-			selected_objects.back().set_selected(true)
+		# TODO: if object is aready selected then desecect it instead /////////////////////////////////////
 		
+		selected_objects.back().set_selected(true)
 		if selected_objects.size() >= 2:
 			
 			var firstobject = selected_objects[0]
