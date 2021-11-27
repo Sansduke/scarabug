@@ -19,17 +19,15 @@ func _ready():
 	matching_types = [0, 1, 2, 3]
 	randomize()
 	startGame()
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+	
 
 func startGame():
 	print("starting game")
 	score = 0
 	score_multiplier = 1
 	level = 1
+	
+	$HUD.update_score(score)
 	
 	hiscore = 0 #incase save file is corrupt
 	hiscore = $DataSaver.loadSave()["hiscore"]

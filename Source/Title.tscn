@@ -2,8 +2,8 @@
 
 [ext_resource path="res://Source/Title.gd" type="Script" id=1]
 [ext_resource path="res://Assets/Textures/backimage1.png" type="Texture" id=2]
-[ext_resource path="res://Assets/Themes/texttheme.tres" type="Theme" id=3]
-[ext_resource path="res://Assets/Themes/DellaRespira-Regular.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Assets/Resources/texttheme.tres" type="Theme" id=3]
+[ext_resource path="res://Assets/Resources/DellaRespira-Regular.ttf" type="DynamicFontData" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 40

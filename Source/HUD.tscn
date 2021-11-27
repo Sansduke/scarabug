@@ -1,9 +1,11 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Source/HUD.gd" type="Script" id=1]
 [ext_resource path="res://Source/GrubSelectionPanel.gd" type="Script" id=2]
-[ext_resource path="res://Assets/Themes/texttheme.tres" type="Theme" id=3]
-[ext_resource path="res://Assets/Themes/DellaRespira-Regular.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Assets/Resources/texttheme.tres" type="Theme" id=3]
+[ext_resource path="res://Assets/Resources/DellaRespira-Regular.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://Assets/Textures/soundon-ico.png" type="Texture" id=5]
+[ext_resource path="res://Assets/Textures/undo-ico.png" type="Texture" id=6]
 
 [sub_resource type="DynamicFont" id=5]
 font_data = ExtResource( 4 )
@@ -149,6 +151,7 @@ margin_right = 760.0
 margin_bottom = 85.0
 toggle_mode = true
 text = "Sound On"
+icon = ExtResource( 5 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -159,6 +162,7 @@ margin_top = 595.0
 margin_right = 760.0
 margin_bottom = 625.0
 text = "Undo"
+icon = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

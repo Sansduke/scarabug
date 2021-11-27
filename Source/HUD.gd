@@ -5,14 +5,17 @@ extends CanvasLayer
 # var a = 2
 # var b = "text"
 var messages = {
-	1 : "level 1 \n\nClick any 2 bugs to swap. \nMatch the same colored scarabs in groups of 4 or more" ,
-	2 : "level 2 \n\nBugged scarabs can't be matched during your turn phase \nbut turn back into their color after" ,
-	3 : "level 3 \n\nThe fly can't be matched during your turn phase \nbut combines with other matches after" ,
-	4 : "level 4 \n\nThe mantis can't be matched during your turn phase \nbut eliminate each other after" ,
-	5 : "level 5 \n\nThe the grub can't be matched during your turn phase \nbut tranforms into a specified color after" ,
-	6 : "level 6 \n\nThe arachnid \n" ,
+	1 : "Level 1 \n\nClick any 2 bugs to swap. \nMatch the same colored scarabs in groups of 4 or more" ,
+	2 : "Level 2 \n\nBugged scarabs can't be matched during your turn phase \nbut turn back into their color after" ,
+	3 : "Level 3 \n\nThe fly can't be matched during your turn phase \nbut combines with other matches after" ,
+	4 : "Level 4 \n\nThe mantis can't be matched during your turn phase \nbut eliminate each other after" ,
+	5 : "Level 5 \n\nThe the grub can't be matched during your turn phase \nbut tranforms into a specified color after" ,
+	6 : "Level 6 \n\nThe arachnid \n" ,
 }
 var grub_selection
+var sound_icon1 = preload("res://Assets/Textures/soundon-ico.png")
+var sound_icon2 = preload("res://Assets/Textures/soundoff-ico.png")
+
 signal start_level
 signal undo_last_move
 signal grub_selection_made
@@ -72,9 +75,11 @@ func _on_SoundToggleButton_toggled(button_pressed):
 	if $SoundToggleButton.pressed:
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), true)
 		$SoundToggleButton.text = "Sound Off"
+		$SoundToggleButton.icon = sound_icon2
 	else:
 		AudioServer.set_bus_mute(AudioServer.get_bus_index("Master"), false)
 		$SoundToggleButton.text = "Sound On"
+		$SoundToggleButton.icon = sound_icon1
 
 
 func _on_UndoButton_pressed():
