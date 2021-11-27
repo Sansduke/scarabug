@@ -4,6 +4,8 @@ Github Game Off 2021 entry. Theme "Bug"
 
 A game made in less then 30 days.
 
+**Itch.io page**: https://sansduke.itch.io/scarabug (not yet live)
+
 **Controls**: Use mouse or touch controls. Any 2 bugs of any type can be swapped with each other.
 
 **Scoring**: Match up same colored scarabs in groups of 4 or more to score points. More points are awarded for larger matches and matches triggered in succession. More points are also awarded at higher levels. 10 x \<match size over 4\> x \<successive matches\> x \<level\>
