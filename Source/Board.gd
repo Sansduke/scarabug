@@ -38,8 +38,8 @@ func startGame():
 	
 
 func endGame():
-	$SFX4.play()
 	if score > hiscore:
+		$SFX4.play()
 		$DataSaver.storeSave({"hiscore": score})
 	startGame()
 
@@ -90,6 +90,7 @@ func endLevel():
 func fillBoard():
 	$PlayArea.reset()
 	
+	#place bugs on a board
 	for rw in range(0, $PlayArea.rows):
 		for col in range(0, $PlayArea.columbs):
 			var newbug = Bug.instance()
@@ -102,7 +103,7 @@ func fillBoard():
 			$PlayArea.set_object_at(col, rw, newbug)
 			newbug.desired_position = Vector2(col*$PlayArea.item_size, rw*$PlayArea.item_size)
 	
-	#check for matches already in place after the baord is set up and change the bug type to remove the match if present
+	#check for matches already in place after the board is set up and change the bug type to remove the match if present
 	#this needs to be done in a seperate loop so it avoids creatind an unrelated match by switching the type
 	for rw in range(0, $PlayArea.rows):
 		for col in range(0, $PlayArea.columbs):
@@ -175,7 +176,7 @@ func clear_match(matches):
 	$PlayArea.last_switch.clear()
 	
 	#increase score
-	score += 10 * max(1, (matches.size()-3)) * score_multiplier
+	score += 10 * max(1, (matches.size()-3)) * score_multiplier * level
 	$HUD.update_score(score)
 	 
 	for col in range(0, $PlayArea.columbs): # for each columb
@@ -282,7 +283,7 @@ func finalMove():
 	
 	for b in get_tree().get_nodes_in_group("bugs"):
 		var type = b.get_type()
-		if range(4, 8).has(type):
+		if range(4, 8).has(type): #glitched
 			b.set_type(type-4)
 			b.transform()
 		if type == 8: #fly

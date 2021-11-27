@@ -231,7 +231,7 @@ stream = ExtResource( 7 )
 
 [node name="Music1" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
-volume_db = -80.0
+volume_db = -15.0
 autoplay = true
 
 [node name="DataSaver" type="Node" parent="."]

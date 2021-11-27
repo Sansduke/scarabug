@@ -6,7 +6,7 @@ extends CanvasLayer
 # var b = "text"
 var messages = {
 	1 : "Level 1 \n\nClick any 2 bugs to swap. \nMatch the same colored scarabs in groups of 4 or more" ,
-	2 : "Level 2 \n\nBugged scarabs can't be matched during your turn phase \nbut turn back into their color after" ,
+	2 : "Level 2 \n\nGlitched scarabs can't be matched during your turn phase \nbut turn back into their color after" ,
 	3 : "Level 3 \n\nThe fly can't be matched during your turn phase \nbut combines with other matches after" ,
 	4 : "Level 4 \n\nThe mantis can't be matched during your turn phase \nbut eliminate each other after" ,
 	5 : "Level 5 \n\nThe the grub can't be matched during your turn phase \nbut tranforms into a specified color after" ,

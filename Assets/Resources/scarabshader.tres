@@ -1,0 +1,51 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float strength: hint_range(0., 1.) = 0.5;
+uniform float speed: hint_range(0., 10.) = 0.5;
+uniform float angle: hint_range(0., 360.) = 0.0;
+uniform float ray_strength: hint_range(0., 360.) = 0.2;
+uniform vec4 mask_color: hint_color;
+
+
+void fragment() {
+	vec4 color = texture(TEXTURE, UV);
+	
+	if (color != mask_color){ //if this pixel color is not the same as the mask color then dont modify this pixel
+		COLOR = color;
+	}
+	else{
+		float offset;
+		if(round(mod(UV.x/UV.y+(TIME/5.0), ray_strength)*10.0) == 1.0){
+			offset = UV.x * cos(radians(angle)) - UV.y * sin(radians(angle));
+		}
+		else{
+			offset = UV.y * acos(radians(angle)) - UV.x * asin(radians(angle));
+		}
+		
+		offset = fract(offset + fract(TIME  * speed));
+		float x = 1. - abs(mod(offset / (1./ 4.), 2.) - 1.);
+		vec3 rainbow;
+		
+		if(offset < 1./4.){
+			rainbow = vec3(.4, mix(.5, .9, x), mix(.6, 1, x)); //sky
+		} else if (offset < .5) {
+			rainbow = vec3(mix(.5, .9, x), .2, .2); //blood
+		} else if (offset < 3./4.) {
+			rainbow = vec3(mix(.6, 1, x), mix(.6, 1, x), .2); //gold
+		} else {
+			rainbow = vec3(.4, mix(.6, 1, x), .2); //grass
+		}
+		COLOR = mix(color, vec4(rainbow, color.a), strength);
+	}
+}"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/strength = 1.0
+shader_param/speed = 0.2
+shader_param/angle = 45.0
+shader_param/ray_strength = 0.2
+shader_param/mask_color = Color( 1, 1, 1, 1 )
