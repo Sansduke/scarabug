@@ -17,6 +17,13 @@ var is_final_move
 func _ready():
 	bug_types = []
 	matching_types = [0, 1, 2, 3]
+	
+	#preload sfx to prevent a freeze during gameplay though this is not really the proper way to do this
+	preload("res://Assets/Audio/523763__matrixxx__select-granted-06.wav")
+	preload("res://Assets/Audio/267528__syseq__good.wav")
+	preload("res://Assets/Audio/146732__leszek-szary__creature.wav")
+	preload("res://Assets/Audio/462089__newagesoup__ethereal-woosh.wav")
+	
 	randomize()
 	startGame()
 	
