@@ -4,7 +4,7 @@ Github Game Off 2021 entry. Theme "Bug"
 
 A game made in less then 30 days.
 
-**Itch.io page**: https://sansduke.itch.io/scarabug (not yet live)
+**Itch.io page**: https://sansduke.itch.io/scarabug
 
 **Controls**: Use mouse or touch controls. Any 2 bugs of any type can be swapped with each other.
 
