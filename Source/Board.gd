@@ -88,10 +88,10 @@ func endLevel():
 			b.queue_free()
 	
 		level += 1
-		$HUD.show_message(level)
-	
-		if level == 6:
+		if level == 7: #no more levels
 			endGame()
+		else:
+			$HUD.show_message(level)
 
 
 func fillBoard():
@@ -147,7 +147,7 @@ func find_matches(atposition, matchtypes, activestack):
 	#north
 	if atposition.y > 0:
 		var posibility = $PlayArea.get_object_at(atposition.x, atposition.y-1)
-		if posibility == null:
+		if posibility == null and !is_instance_valid(posibility):
 			return
 		if matchtypes.has(posibility.get_type()) and !activestack.has(posibility):
 			find_matches(Vector2(atposition.x, atposition.y-1), matchtypes, activestack)
@@ -155,7 +155,7 @@ func find_matches(atposition, matchtypes, activestack):
 	#south
 	if atposition.y < $PlayArea.rows-1:
 		var posibility = $PlayArea.get_object_at(atposition.x, atposition.y+1)
-		if posibility == null:
+		if posibility == null and !is_instance_valid(posibility):
 			return
 		if matchtypes.has(posibility.get_type()) and !activestack.has(posibility):
 			find_matches(Vector2(atposition.x, atposition.y+1), matchtypes, activestack)
@@ -163,7 +163,7 @@ func find_matches(atposition, matchtypes, activestack):
 	#east
 	if atposition.x < $PlayArea.columbs-1:
 		var posibility = $PlayArea.get_object_at(atposition.x+1, atposition.y)
-		if posibility == null:
+		if posibility == null and !is_instance_valid(posibility):
 			return
 		if matchtypes.has(posibility.get_type()) and !activestack.has(posibility):
 			find_matches(Vector2(atposition.x+1, atposition.y), matchtypes, activestack)
@@ -171,7 +171,7 @@ func find_matches(atposition, matchtypes, activestack):
 	#west
 	if atposition.x > 0:
 		var posibility = $PlayArea.get_object_at(atposition.x-1, atposition.y)
-		if posibility == null:
+		if posibility == null and !is_instance_valid(posibility):
 			return
 		if matchtypes.has(posibility.get_type()) and !activestack.has(posibility):
 			find_matches(Vector2(atposition.x-1, atposition.y), matchtypes, activestack)
@@ -193,11 +193,14 @@ func clear_match(matches):
 			if $PlayArea.map[col].has(mb):
 				$PlayArea.map[col].erase(mb)
 				mb.clear()
-				
+		while $PlayArea.map[col].has(null):
+			$PlayArea.map[col].erase(null)
 
 		# add more bugs if this columb is missing bugs
+		var newbugcount = 0
 		while $PlayArea.map[col].size() < $PlayArea.rows:
-
+			newbugcount += 1
+			
 			var newbug = Bug.instance()
 			var possibletypes = bug_types.duplicate()
 			possibletypes.shuffle()
@@ -208,7 +211,7 @@ func clear_match(matches):
 			
 			#move the bug
 			newbug.position.x = col * $PlayArea.item_size
-			newbug.position.y = $PlayArea.rows * $PlayArea.item_size
+			newbug.position.y = $PlayArea.rows * $PlayArea.item_size + 32*newbugcount
 			newbug.desired_position = newbug.position
 			newbug.desired_position.y = $PlayArea.map[col].size() * $PlayArea.item_size
 
@@ -288,8 +291,41 @@ func finalMove():
 		$HUD.grub_color()
 		grubtype = yield($HUD, "grub_selection_made") #yeild to get input from player on grub type
 	
+	var spidertarget
+	if level == 6:
+		$HUD.spider_target()
+		spidertarget = yield($HUD, "spider_selection_made") #yeild to get input from player on spider target
+		
+		var spider_was_here = false
+		for b in get_tree().get_nodes_in_group("bugs"):
+			var type = b.get_type()
+			
+			if type == 11: #arachnid
+				spider_was_here = true
+				var spider_pos = Vector2(floor(b.position.x/$PlayArea.item_size), floor(b.position.y/$PlayArea.item_size))
+				var spider_stack = []
+				
+				$PlayArea.map[spider_pos.x].erase(b)
+				b.kill()
+				score += 1000
+
+				for x in range(3):
+					for y in range(3):
+						var targetobject = $PlayArea.get_object_at(spider_pos.x-1+x, spider_pos.y-1+y)
+						if targetobject != null and targetobject.get_type() == spidertarget:
+							$PlayArea.map[spider_pos.x-1+x].erase(targetobject)
+							targetobject.kill()
+							
+				
+		if spider_was_here:
+			$SFX5.play()
+			yield($SFX5, "finished")
+			clear_match([])
+			
+	
 	for b in get_tree().get_nodes_in_group("bugs"):
 		var type = b.get_type()
+		
 		if range(4, 8).has(type): #glitched
 			b.set_type(type-4)
 			b.transform()
@@ -304,8 +340,7 @@ func finalMove():
 		elif type == 10: #grub
 			b.set_type(grubtype)
 			b.transform()
-		elif type == 11: #arachnid
-			continue
+		
 	
 	if level > 1:
 		$SFX3.play() #play final move sound

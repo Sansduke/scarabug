@@ -10,15 +10,16 @@ var messages = {
 	3 : "Level 3 \n\nThe fly can't be matched during your turn phase \nbut combines with other matches after" ,
 	4 : "Level 4 \n\nThe mantis can't be matched during your turn phase \nbut eliminate each other after" ,
 	5 : "Level 5 \n\nThe the grub can't be matched during your turn phase \nbut tranforms into a specified color after" ,
-	6 : "Level 6 \n\nThe arachnid \n" ,
+	6 : "Level 6 \n\nThe arachnid can't be matched during your turn phase. \nEliminates itself and nearby scarabs after" ,
 }
-var grub_selection
+
 var sound_icon1 = preload("res://Assets/Textures/soundon-ico.png")
 var sound_icon2 = preload("res://Assets/Textures/soundoff-ico.png")
 
 signal start_level
 signal undo_last_move
 signal grub_selection_made
+signal spider_selection_made
 
 
 # Called when the node enters the scene tree for the first time.
@@ -41,11 +42,16 @@ func show_message(mid):
 	$StartButton.visible = true
 
 func grub_color():
-	grub_selection = -1
-	$GrubSelectionPanel.show()
-	grub_selection = yield($GrubSelectionPanel, "grub_selection_made")
-	$GrubSelectionPanel.hide()
+	var grub_selection = -1
+	$SelectionPanel.get_user_input("What color scarab should the grubs turn in to?")
+	grub_selection = yield($SelectionPanel, "selection_made")
 	emit_signal("grub_selection_made", grub_selection)
+
+func spider_target():
+	var spider_target_color = -1
+	$SelectionPanel.get_user_input("What color scarab should the arachnids eliminate?")
+	spider_target_color = yield($SelectionPanel, "selection_made")
+	emit_signal("spider_selection_made", spider_target_color)
 
 func update_score(score):
 	$ScoreValue.text = str(score)
@@ -60,7 +66,7 @@ func update_turns(turns):
 	$TurnsValue.text = str(turns)
 
 func is_waiting():
-	if $MessageLabel.visible or $GrubSelectionPanel.visible:
+	if $MessageLabel.visible or $SelectionPanel.visible:
 		return false
 	else:
 		return true

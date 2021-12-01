@@ -6,6 +6,7 @@ export var playarea_position = Vector2.ZERO
 
 var desired_position
 var speed
+var max_speed
 var bug_type
 var selected
 var moving
@@ -18,7 +19,8 @@ func _ready():
 	update()
 	#bug_type = 0
 	selected = false
-	speed = 400
+	speed = 400.0
+	max_speed = 400.0
 	desired_position = position
 
 func set_type(type=0):
@@ -51,6 +53,12 @@ func clear():
 	$Sprite.visible = false
 	$DeletionTimer.start()
 
+func kill():
+	$KillParticles.restart()
+	$Sprite.visible = false
+	$DeletionTimer.start()
+	#queue_free()
+
 func transform():
 	$TransformParticles.restart()
 
@@ -58,9 +66,11 @@ func transform():
 func _process(delta):
 	if desired_position != position:
 		moving = true
+		speed = move_toward(speed, max_speed, 20)
 		position = position.move_toward(desired_position, speed * delta)
 	else:
 		moving = false
+		speed = 0.0
 		
 		
 

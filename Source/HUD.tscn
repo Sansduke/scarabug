@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Source/HUD.gd" type="Script" id=1]
-[ext_resource path="res://Source/GrubSelectionPanel.gd" type="Script" id=2]
+[ext_resource path="res://Source/SelectionPanel.gd" type="Script" id=2]
 [ext_resource path="res://Assets/Resources/texttheme.tres" type="Theme" id=3]
 [ext_resource path="res://Assets/Resources/DellaRespira-Regular.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://Assets/Textures/soundon-ico.png" type="Texture" id=5]
@@ -167,7 +167,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="GrubSelectionPanel" type="Panel" parent="."]
+[node name="SelectionPanel" type="Panel" parent="."]
 visible = false
 margin_left = 525.0
 margin_top = 300.0
@@ -178,18 +178,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="InstructionLabel" type="Label" parent="GrubSelectionPanel"]
+[node name="InstructionLabel" type="Label" parent="SelectionPanel"]
 margin_top = 15.0
 margin_right = 175.0
 margin_bottom = 31.0
 text = "What color scarab should
 the grubs turn in to?"
 align = 1
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ButtonT0" type="Button" parent="GrubSelectionPanel"]
+[node name="ButtonT0" type="Button" parent="SelectionPanel"]
 margin_left = 72.0
 margin_top = 63.0
 margin_right = 105.0
@@ -201,7 +202,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ButtonT1" type="Button" parent="GrubSelectionPanel"]
+[node name="ButtonT1" type="Button" parent="SelectionPanel"]
 margin_left = 64.0
 margin_top = 99.0
 margin_right = 113.0
@@ -210,7 +211,7 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 2 )
 text = "Blood"
 
-[node name="ButtonT2" type="Button" parent="GrubSelectionPanel"]
+[node name="ButtonT2" type="Button" parent="SelectionPanel"]
 margin_left = 66.0
 margin_top = 137.0
 margin_right = 108.0
@@ -219,7 +220,7 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/normal = SubResource( 3 )
 text = "Gold"
 
-[node name="ButtonT3" type="Button" parent="GrubSelectionPanel"]
+[node name="ButtonT3" type="Button" parent="SelectionPanel"]
 margin_left = 64.0
 margin_top = 175.0
 margin_right = 112.0
@@ -234,7 +235,7 @@ __meta__ = {
 [connection signal="pressed" from="StartButton" to="." method="_on_StartButton_pressed"]
 [connection signal="toggled" from="SoundToggleButton" to="." method="_on_SoundToggleButton_toggled"]
 [connection signal="pressed" from="UndoButton" to="." method="_on_UndoButton_pressed"]
-[connection signal="pressed" from="GrubSelectionPanel/ButtonT0" to="GrubSelectionPanel" method="_on_ButtonT0_pressed"]
-[connection signal="pressed" from="GrubSelectionPanel/ButtonT1" to="GrubSelectionPanel" method="_on_ButtonT1_pressed"]
-[connection signal="pressed" from="GrubSelectionPanel/ButtonT2" to="GrubSelectionPanel" method="_on_ButtonT2_pressed"]
-[connection signal="pressed" from="GrubSelectionPanel/ButtonT3" to="GrubSelectionPanel" method="_on_ButtonT3_pressed"]
+[connection signal="pressed" from="SelectionPanel/ButtonT0" to="SelectionPanel" method="_on_ButtonT0_pressed"]
+[connection signal="pressed" from="SelectionPanel/ButtonT1" to="SelectionPanel" method="_on_ButtonT1_pressed"]
+[connection signal="pressed" from="SelectionPanel/ButtonT2" to="SelectionPanel" method="_on_ButtonT2_pressed"]
+[connection signal="pressed" from="SelectionPanel/ButtonT3" to="SelectionPanel" method="_on_ButtonT3_pressed"]

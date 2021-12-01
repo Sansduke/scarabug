@@ -37,7 +37,9 @@ func swap_objects():
 	pass
 
 func set_object_at(x, y, object):
-	map[x][y] = object
+	
+	if x >= 0 and y >= 0 and x < columbs and y < rows:
+		map[x][y] = object
 
 func get_object_at(x, y):
 	if x >= map.size() or y >= map[x].size():
