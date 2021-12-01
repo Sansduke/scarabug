@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Source/Bug.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Source/Board.gd" type="Script" id=2]
@@ -16,6 +16,8 @@
 [ext_resource path="res://Source/DataSaver.gd" type="Script" id=14]
 [ext_resource path="res://Assets/Audio/146732__leszek-szary__creature.wav" type="AudioStream" id=15]
 [ext_resource path="res://Assets/Audio/561310__badoink__dead-end.wav" type="AudioStream" id=16]
+[ext_resource path="res://Source/SFXPlayer.gd" type="Script" id=17]
+[ext_resource path="res://Assets/Audio/eastandwest.mp3" type="AudioStream" id=18]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 175, 300 )
@@ -238,8 +240,15 @@ stream = ExtResource( 8 )
 volume_db = -15.0
 autoplay = true
 
+[node name="Music2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 18 )
+volume_db = -15.0
+
 [node name="DataSaver" type="Node" parent="."]
 script = ExtResource( 14 )
+
+[node name="SFXPlayer" type="Node" parent="."]
+script = ExtResource( 17 )
 
 [connection signal="start_level" from="HUD" to="." method="startLevel"]
 [connection signal="undo_last_move" from="HUD" to="PlayArea" method="_on_HUD_undo_last_move"]
@@ -250,3 +259,5 @@ script = ExtResource( 14 )
 [connection signal="timeout" from="FinalMoveTimer" to="." method="finalMove"]
 [connection signal="timeout" from="FinalClearTimer" to="." method="finalClear"]
 [connection signal="timeout" from="LevelDelayTimer" to="." method="endLevel"]
+[connection signal="finished" from="Music1" to="." method="_on_Music1_finished"]
+[connection signal="finished" from="Music2" to="." method="_on_Music2_finished"]

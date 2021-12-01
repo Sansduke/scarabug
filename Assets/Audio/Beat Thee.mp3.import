@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Beat Thee.mp3-8daf1e97dc52a3b5400a0be85f1c5f32.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/Beat Thee.mp3"
+dest_files=[ "res://.import/Beat Thee.mp3-8daf1e97dc52a3b5400a0be85f1c5f32.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

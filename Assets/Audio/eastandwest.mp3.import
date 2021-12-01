@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/eastandwest.mp3-96d26f70eed07f950eaafe7176222d1e.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/eastandwest.mp3"
+dest_files=[ "res://.import/eastandwest.mp3-96d26f70eed07f950eaafe7176222d1e.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/267528__syseq__good.wav-41a403b3e1252fea8b080efeee3052c9.sample"
+
+[deps]
+
+source_file="res://Assets/Audio/267528__syseq__good.wav"
+dest_files=[ "res://.import/267528__syseq__good.wav-41a403b3e1252fea8b080efeee3052c9.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

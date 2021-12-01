@@ -2,8 +2,8 @@
 addons/
 
 # Godot stuff
-.import/
-*.import
+#.import/
+#*.import
 
 
 # Mono-specific ignores

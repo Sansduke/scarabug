@@ -18,12 +18,6 @@ func _ready():
 	bug_types = []
 	matching_types = [0, 1, 2, 3]
 	
-	#preload sfx to prevent a freeze during gameplay though this is not really the proper way to do this
-	preload("res://Assets/Audio/523763__matrixxx__select-granted-06.wav")
-	preload("res://Assets/Audio/267528__syseq__good.wav")
-	preload("res://Assets/Audio/146732__leszek-szary__creature.wav")
-	preload("res://Assets/Audio/462089__newagesoup__ethereal-woosh.wav")
-	
 	randomize()
 	startGame()
 	
@@ -46,7 +40,8 @@ func startGame():
 
 func endGame():
 	if score > hiscore:
-		$SFX4.play()
+		#$SFX4.play()
+		$SFXPlayer.play_sound("hiscore")
 		$DataSaver.storeSave({"hiscore": score})
 	startGame()
 
@@ -228,12 +223,13 @@ func clear_all_matches():
 				match_was_found = true
 				clear_match(potentalmatches)
 	if match_was_found:
-		$SFX1.play() #play match sound again and increase pitch
-		$SFX1.pitch_scale += 0.1
+		#$SFX1.play() #play match sound again and increase pitch
+		$SFXPlayer.play_sound("match")
+		$SFXPlayer.pitch += 0.1
 		score_multiplier += 1
 		$SubMatchTimer.start()
 	else:
-		$SFX1.pitch_scale = 1.0
+		$SFXPlayer.pitch = 1.0
 		score_multiplier = 1
 
 func ready_for_input():
@@ -258,7 +254,8 @@ func _on_PlayArea_switched_objects(firstposition, secondposition):
 		match_was_found = true
 	
 	if match_was_found:
-		$SFX1.play() #play match sound
+		#$SFX1.play() #play match sound
+		$SFXPlayer.play_sound("match")
 		score_multiplier += 1
 		$SubMatchTimer.start()
 	else:
@@ -267,7 +264,8 @@ func _on_PlayArea_switched_objects(firstposition, secondposition):
 	turns_left -= 1
 	$HUD.update_turns(turns_left)
 	if turns_left <= 0:
-		$SFX2.play() #play end of level sound
+		#$SFX2.play() #play end of level sound
+		$SFXPlayer.play_sound("levelend")
 		$FinalMoveTimer.start()
 
 
@@ -318,8 +316,9 @@ func finalMove():
 							
 				
 		if spider_was_here:
-			$SFX5.play()
-			yield($SFX5, "finished")
+			#$SFX5.play()
+			$SFXPlayer.play_sound("spider")
+			yield($SFXPlayer, "stream_finished")
 			clear_match([])
 			
 	
@@ -343,7 +342,8 @@ func finalMove():
 		
 	
 	if level > 1:
-		$SFX3.play() #play final move sound
+		#$SFX3.play() #play final move sound
+		$SFXPlayer.play_sound("scarab")
 	$FinalClearTimer.start()
 
 func finalClear():
@@ -354,3 +354,11 @@ func _on_PlayArea_undid_switched_objects():
 	turns_left += 1
 	$HUD.update_turns(turns_left)
 	
+
+
+func _on_Music1_finished():
+	$Music2.play()
+
+
+func _on_Music2_finished():
+	$Music1.play()
