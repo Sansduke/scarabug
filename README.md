@@ -8,7 +8,7 @@ A game made in less then 30 days.
 
 **Controls**: Use mouse or touch controls. Any 2 bugs of any type can be swapped with each other.
 
-**Scoring**: Match up same colored scarabs in groups of 4 or more to score points. More points are awarded for larger matches and matches triggered in succession. More points are also awarded at higher levels. 10 x \<match size over 4\> x \<successive matches\> x \<level\>
+**Scoring**: Match up same colored scarabs in groups of 4 or more to score points. More points are awarded for larger matches and matches triggered in succession. More points are also awarded at higher levels. 10 x \<match size over 4\> x \<successive matches\> x \<level\>. Spider bonus 1000 point each.
 
 **Tools used**:<br>
 Godot game engine https://godotengine.org/<br>
